@@ -1,4 +1,4 @@
-#Apache Hadoop 2.8.1 Docker image
+# Apache Hadoop 2.8.1 Docker image
 
 Forked: https://github.com/sequenceiq/docker-hadoop-ubuntu
 
