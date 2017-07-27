@@ -1,9 +1,11 @@
-# Creates pseudo distributed hadoop 2.6.0 on Ubuntu 14.04
+# Original repository https://github.com/sequenceiq/docker-hadoop-ubuntu
 #
-# docker build -t sequenceiq/hadoop-ubuntu:2.6.0 .
+# Update to Java 8 and Hadoop 2.8.1 using the latest stable Ubuntu
+#
+# docker build -t zoltannz/hadoop-ubuntu:2.8.1 .
+# docker pull zoltannz/hadoop-ubuntu:2.8.1
 
 FROM ubuntu
-MAINTAINER SequenceIQ
 
 USER root
 
@@ -53,21 +55,9 @@ ADD yarn-site.xml $HADOOP_PREFIX/etc/hadoop/yarn-site.xml
 
 RUN $HADOOP_PREFIX/bin/hdfs namenode -format
 
-# fixing the libhadoop.so like a boss
-#RUN rm  /usr/local/hadoop/lib/native/*
-#RUN curl -Ls http://dl.bintray.com/sequenceiq/sequenceiq-bin/hadoop-native-64-2.6.0.tar|tar -x -C /usr/local/hadoop/lib/native/
-
 ADD ssh_config /root/.ssh/config
 RUN chmod 600 /root/.ssh/config
 RUN chown root:root /root/.ssh/config
-
-# # installing supervisord
-# RUN yum install -y python-setuptools
-# RUN easy_install pip
-# RUN curl https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -o - | python
-# RUN pip install supervisor
-#
-# ADD supervisord.conf /etc/supervisord.conf
 
 ADD bootstrap.sh /etc/bootstrap.sh
 RUN chown root:root /etc/bootstrap.sh
@@ -84,7 +74,6 @@ RUN ls -la /usr/local/hadoop/etc/hadoop/*-env.sh
 RUN sed  -i "/^[^#]*UsePAM/ s/.*/#&/"  /etc/ssh/sshd_config
 RUN echo "UsePAM no" >> /etc/ssh/sshd_config
 RUN echo "Port 2122" >> /etc/ssh/sshd_config
-
 
 RUN service ssh start && $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && $HADOOP_PREFIX/sbin/start-dfs.sh && $HADOOP_PREFIX/bin/hdfs dfs -mkdir -p /user/root
 RUN service ssh start && $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh && $HADOOP_PREFIX/sbin/start-dfs.sh && $HADOOP_PREFIX/bin/hdfs dfs -put $HADOOP_PREFIX/etc/hadoop/ input
