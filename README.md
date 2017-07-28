@@ -2,7 +2,7 @@
 
 Forked from https://github.com/sequenceiq/docker-hadoop-ubuntu
 
-Updated to Hadoop 2.8.1 and Java 8.
+Update to Java 8 and Hadoop 2.8.1, using the latest stable Ubuntu
 
 # Build the image
 
